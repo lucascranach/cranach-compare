@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="https://lucascranach.github.io/styleguide/shared/favicon.svg" />
+  <link rel="stylesheet" href="https://lucascranach.github.io/styleguide/shared/styles/main.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+  <link rel="stylesheet" href="./styles/components.css">
+  <title>cda_ // Cranach Compare</title>
+</head>
+
+<body id="compareRoot">
+  <!--nav class="main-navigation" role="navigation" aria-label="main navigation" data-component="molecules/navigation">
+    <a class="logo">
+      <span class="logo" data-component="atoms/logo">cda_&nbsp;</span>
+    </a>
+  </nav-->
+  <!--nav class="main-navigation">
+    <div class="main-navigation__item jsToogleFullsceen" ><i class="icon l">fullscreen</i></div>
+  </nav-->
+  <main>
+    <section id="comparismStage" class="comparism-stage">
+      <div id="leftArea" class="stage-area stage-area--is-active">
+        <div id="leftAreaNavigation" class="area-navigation"></div>
+        <div id="leftViewer" class="viewer"></div>
+      </div>
+      <div id="rightArea" class="stage-area">
+      <div id="rightAreaNavigation" class="area-navigation"></div>
+        <div id="rightViewer" class="viewer"></div>
+      </div>
+    </section>
+  </main>
+  <div id="variantSelector" class="variant-selector">
+  </div>
+  <aside class="artefact-selector">
+    <div id="artefactSelectorNavigation" class="artefact-selector__navigation">
+    </div>
+    <ul id="imageStripe" class="image-stripe__wrap">
+    </ul>
+  </aside>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/reefjs@8/dist/reef.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/openseadragon@2.4/build/openseadragon/openseadragon.min.js"></script>
+<script src="scripts/config.js"></script>
+<script src="scripts/cranach-compare.js"></script>
+</html>
