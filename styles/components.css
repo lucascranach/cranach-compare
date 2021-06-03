@@ -1,70 +1,65 @@
-
 /* Artefact Selector
 ###########################################################################  */
 
-.artefact-selector{
+.artefact-selector {
   position: fixed;
   left: 0;
   right: 0;
   bottom: 4px;
   z-index: var(--level-overall-nav);
+
   /* background-color: var(--darken-strong); */
 }
 
-.artefact-selector__navigation{
+.artefact-selector__navigation {
   display: flex;
   justify-content: center;
   gap: var(--xxs);
 }
 
-.artefact-selector__navigation-toggle{
+.artefact-selector__navigation-toggle {
   padding: var(--s);
   background-color: var(--darker);
   border-radius: var(--radius-s);
   margin-bottom: var(--s);
 }
 
-.artefact-selector__navigation-toggle .icon{
+.artefact-selector__navigation-toggle .icon {
   margin: 0;
 }
 
-.artefact-selector__navigation-toggle:hover{
+.artefact-selector__navigation-toggle:hover {
   cursor: pointer;
 }
 
-.image-stripe-grid{
+.image-stripe-grid {
   display: grid;
   gap: var(--s);
   grid-template-columns: repeat(auto-fit, var(--tile-xxs));
-  justify-content:center;
+  justify-content: center;
   max-height: 0;
   transition: max-height var(--tr-fast);
   background-color: var(--darken-strongest);
   box-shadow: var(--shadow-top-m);
 }
 
-.image-stripe-grid--is-active{
+.image-stripe-grid--is-active {
   max-height: var(--tile-xxs);
 }
 
-
-.small-card{
+.small-card {
   display: flex;
   flex-direction: column;
   justify-content: center;
   background-color: var(--darker);
-  pointer-events:auto;
+  pointer-events: auto;
 }
 
-.small-card:hover{
+.small-card:hover {
   cursor: pointer;
 }
 
-.small-card__image-holder{
-  
-}
-
-.small-card__image{
+.small-card__image {
   width: var(--tile-xxs);
   height: var(--tile-xxs);
   object-fit: contain;
@@ -74,24 +69,24 @@
 /* Stage
 ###########################################################################  */
 
-.comparism-stage{
+.comparism-stage {
   width: 100vw;
   height: 100vh;
   display: grid;
   grid-template-columns: 50vw 50vw;
 }
 
-.stage-area{
+.stage-area {
   position: relative;
   height: 100vh;
   width: 50vw;
 }
 
-.stage-area + .stage-area{
+.stage-area + .stage-area {
   border-left: solid var(--border-stroke-weight-s) var(--dark);
 }
 
-.viewer{
+.viewer {
   position: absolute;
   left: 0;
   top: 0;
@@ -104,24 +99,23 @@
 /* Stage Indicator
 ###########################################################################  */
 
-.active-stage-indicator{
+.active-stage-indicator {
   height: 4px;
   width: 99%;
   box-shadow: inset 0 4px 0 transparent;
 }
 
-.active-stage-indicator--is-active{
+.active-stage-indicator--is-active {
   box-shadow: inset 0 4px 0 var(--accent);
 }
 
-.area-navigation{
+.area-navigation {
   position: absolute;
   display: flex;
   justify-content: center;
   bottom: 0;
-  left:0;
+  left: 0;
   right: 0;
-
   z-index: var(--level-content-nav);
 }
 
@@ -129,7 +123,7 @@
 /* Variante Selector
 ###########################################################################  */
 
-.variant-selector{
+.variant-selector {
   position: absolute;
   top: 0;
   left: 0;
@@ -137,25 +131,25 @@
   bottom: 20px;
   display: none;
   z-index: var(--level-section-nav);
-  pointer-events:none;
+  pointer-events: none;
 }
 
-.variant-selector--is-active{
+.variant-selector--is-active {
   display: block;
 }
 
-.variant-selector__navigation-toggle{
+.variant-selector__navigation-toggle {
   padding: var(--s);
   text-align: right;
   background-color: var(--darkest);
-  pointer-events:auto;
+  pointer-events: auto;
 }
 
-.variant-selector__navigation-toggle:hover{
+.variant-selector__navigation-toggle:hover {
   cursor: pointer;
 }
 
-.variant-stripe__wrap{
+.variant-stripe__wrap {
   position: relative;
   transition: all var(--tr-fast);
   background-color: var(--darken-strongest);
@@ -164,17 +158,17 @@
   width: 50vw;
 }
 
-.variant-stripe__wrap--is-right{
+.variant-stripe__wrap--is-right {
   margin-left: 50vw;
-  justify-content:right;
+  justify-content: right;
 }
 
-.variant-stripe__wrap--is-left{
+.variant-stripe__wrap--is-left {
   margin-right: 50vw;
-  justify-content:left;
+  justify-content: left;
 }
 
-.variant-stripe__grid{
+.variant-stripe__grid {
   display: grid;
   gap: var(--s);
   grid-template-columns: repeat(auto-fit, var(--tile-xxs));
@@ -185,37 +179,37 @@
 /* Main Navigation
 ###########################################################################  */
 
-.main-navigation{
+.main-navigation {
   position: absolute;
   top: 0;
   left: 0;
   bottom: 0;
   right: 0;
-  display:flex;
+  display: flex;
   align-items: center;
   justify-content: center;
   z-index: var(--level-section-nav);
   padding: 0;
 }
 
-.main-navigation__item{
+.main-navigation__item {
   padding: var(--s);
   background-color: var(--darker);
   border-radius: var(--radius-s);
   margin-bottom: var(--s);
-  pointer-events:auto; 
+  pointer-events: auto;
 }
 
-.main-navigation__item .icon{
+.main-navigation__item .icon {
   margin: 0;
   margin-right: 0 !important;
-  pointer-events:none; 
+  pointer-events: none;
 }
 
-.main-navigation__item:hover{
+.main-navigation__item:hover {
   cursor: pointer;
 }
 
-.main-navigation__item--is-hidden{
+.main-navigation__item--is-hidden {
   display: none;
 }
