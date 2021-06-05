@@ -188,6 +188,7 @@ class Compare {
   changeArtefact(element) {
     const id = element.dataset.target;
     const artefact = store.data.artefacts[id];
+
     this.getVariants(id, artefact);
     this.updateStage(id, 'artefact');
   }
@@ -242,8 +243,8 @@ class Compare {
 
   getArtefactUrl(artefactId) {
     const artefact = store.data.artefacts[artefactId];
-    const artefactView = artefact.imageStack.overall.images[0].tiles;
-    return this.getViewUrl(artefactId, artefactView.path, artefactView.src);
+    const artefactView = artefact.data.imageStack.overall.images[0].tiles;
+    return this.getViewUrl(artefact.slug, artefactView.path, artefactView.src);
   }
 
   getVariantUrl(variantId) {
@@ -256,11 +257,11 @@ class Compare {
     store.data.variants = {};
     store.data.variantSelector = [];
     variants.forEach((variant) => {
-      artefact.imageStack[variant].images.forEach((image) => {
+      artefact.data.imageStack[variant].images.forEach((image) => {
         const variantPreview = image.xsmall;
         const variantId = variantPreview.src;
         const variantPreviewUrl = this.getPreviewUrl(
-          artefactId, variantPreview.path, variantPreview.src,
+          artefact.slug, variantPreview.path, variantPreview.src,
         );
         store.data.variants[variantId] = { artefactId, image };
         store.data.variantSelector.push({ id: variantId, src: variantPreviewUrl });
@@ -332,7 +333,12 @@ class Compare {
       const artefacts = params.get('artefacts').replace(' ', '').split(',');
       artefacts.forEach((artefact) => {
         (async () => {
-          const url = this.config['image-data-api'] + artefact;
+          const [inventoryNumber, objectName] = artefact.split(/:/);
+          
+          const suffix = objectName !== '' ? `_${objectName}` : '';
+          const aretfactSlug = `${inventoryNumber}${suffix}`;
+          const url = this.config['image-data-api'] + aretfactSlug;
+
           try {
             const response = await fetch(url, {
               method: 'GET',
@@ -343,7 +349,7 @@ class Compare {
               },
             });
             const data = await response.json();
-            this.addArtefactDataToObject(artefact, data);
+            this.addArtefactDataToObject(artefact, data, aretfactSlug);
           } catch (err) {
             console.error(`${err}. There seems to be no data for ${artefact}`);
           }
@@ -352,24 +358,24 @@ class Compare {
     }
   }
 
-  addArtefactDataToObject(artefactId, artefactData) {
-    store.data.artefacts[artefactId] = artefactData;
+  addArtefactDataToObject(artefactId, artefactData, artefactSlug) {
+    store.data.artefacts[artefactId] = { data: artefactData, slug: artefactSlug };
 
     const artefactPreview = artefactData.imageStack.overall.images[0].xsmall;
     const artefactPreviewUrl = this.getPreviewUrl(
-      artefactId, artefactPreview.path, artefactPreview.src,
+      artefactSlug, artefactPreview.path, artefactPreview.src,
     );
-    store.data.artefactSelector.push({ id: artefactId, src: artefactPreviewUrl });
+    store.data.artefactSelector.push({ id: artefactId, src: artefactPreviewUrl, slug: artefactSlug});
   }
 
-  getPreviewUrl(id, path, src) {
+  getPreviewUrl(slug, path, src) {
     const server = this.config.imageserver;
-    return `${server}${id}/${path}/${src}`;
+    return `${server}${slug}/${path}/${src}`;
   }
 
-  getViewUrl(id, path, src) {
+  getViewUrl(slug, path, src) {
     const server = this.config.baseUrlTiles;
-    return `${server}${id}/${path}/${src}`;
+    return `${server}${slug}/${path}/${src}`;
   }
 }
 
