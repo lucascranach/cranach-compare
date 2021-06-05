@@ -321,11 +321,8 @@ class Compare {
     this.viewerControl[viewerId] = this[viewerId];
     this.viewerControl[viewerId].open(viewUrl);
     this.viewerControl[viewerId].addHandler('open', () => {
-      // viewer.viewport.panTo(new OpenSeadragon.Point(0.5, 0.5));
-      // viewer.viewport.zoomTo(20, null, true);
     });
 
-    // this.stage.data[area] = { id: artefactId, src: artefactViewUrl, type: artefactViewType };
   }
 
   getArtefactsFromQuery() {
