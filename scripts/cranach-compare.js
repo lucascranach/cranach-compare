@@ -67,7 +67,7 @@ class Compare {
     this.artefactSelector = new Reef('#imageStripe', {
       store,
       template() {
-        const activeClass = store.data.artefactSelectorIsOpen ? 'image-stripe-grid--is-active' : '';
+        const activeClass = store.data.artefactSelectorIsOpen ? '' : 'image-stripe-grid--is-active';
         const imageStripe = `
         <div class="image-stripe-grid ${activeClass}">
           ${store.data.artefactSelector.map((artefact) => `
@@ -188,7 +188,7 @@ class Compare {
   changeArtefact(element) {
     const id = element.dataset.target;
     const artefact = store.data.artefacts[id];
-
+    console.log(artefact);
     this.getVariants(id, artefact);
     this.updateStage(id, 'artefact');
   }
@@ -333,23 +333,24 @@ class Compare {
       const artefacts = params.get('artefacts').replace(' ', '').split(',');
       artefacts.forEach((artefact) => {
         (async () => {
-          const [inventoryNumber, objectName] = artefact.split(/:/);
+          const [inventoryNumber, objectName, entityType] = artefact.split(/:/);
           
           const suffix = objectName !== '' ? `_${objectName}` : '';
-          const aretfactSlug = `${inventoryNumber}${suffix}`;
-          const url = this.config['image-data-api'] + aretfactSlug;
+          const prefix = entityType === 'G' ? 'G_' : '';
+          const artefactSlug = `${prefix}${inventoryNumber}${suffix}`;
+          const url = this.config['image-data-api'] + artefactSlug;
 
           try {
             const response = await fetch(url, {
               method: 'GET',
               withCredentials: true,
               headers: {
-                'x-api-key': this.config['api-key'],
+                'x-api-key': this.config['image-data-api-key'],
                 'Content-Type': 'application/json',
               },
             });
             const data = await response.json();
-            this.addArtefactDataToObject(artefact, data, aretfactSlug);
+            this.addArtefactDataToObject(artefact, data, artefactSlug, entityType);
           } catch (err) {
             console.error(`${err}. There seems to be no data for ${artefact}`);
           }
@@ -358,14 +359,14 @@ class Compare {
     }
   }
 
-  addArtefactDataToObject(artefactId, artefactData, artefactSlug) {
-    store.data.artefacts[artefactId] = { data: artefactData, slug: artefactSlug };
+  addArtefactDataToObject(artefactId, artefactData, artefactSlug, entityType) {
+    store.data.artefacts[artefactId] = { data: artefactData, slug: artefactSlug, entityType: entityType };
 
     const artefactPreview = artefactData.imageStack.overall.images[0].xsmall;
     const artefactPreviewUrl = this.getPreviewUrl(
       artefactSlug, artefactPreview.path, artefactPreview.src,
     );
-    store.data.artefactSelector.push({ id: artefactId, src: artefactPreviewUrl, slug: artefactSlug});
+    store.data.artefactSelector.push({ id: artefactId, src: artefactPreviewUrl, slug: artefactSlug, entityType: entityType});
   }
 
   getPreviewUrl(slug, path, src) {

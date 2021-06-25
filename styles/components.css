@@ -33,18 +33,20 @@
 }
 
 .image-stripe-grid {
+  padding: var(--s);
   display: grid;
   gap: var(--s);
   grid-template-columns: repeat(auto-fit, var(--tile-xxs));
   justify-content: center;
-  max-height: 0;
   transition: max-height var(--tr-fast);
   background-color: var(--darken-strongest);
   box-shadow: var(--shadow-top-m);
+  height: auto;
+  overflow: hidden;
 }
 
 .image-stripe-grid--is-active {
-  max-height: var(--tile-xxs);
+  height: 0;
 }
 
 .small-card {
