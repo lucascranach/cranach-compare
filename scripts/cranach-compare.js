@@ -188,7 +188,6 @@ class Compare {
   changeArtefact(element) {
     const id = element.dataset.target;
     const artefact = store.data.artefacts[id];
-    console.log(artefact);
     this.getVariants(id, artefact);
     this.updateStage(id, 'artefact');
   }
@@ -221,7 +220,8 @@ class Compare {
       }
 
       if (target.classList.contains('js-closeVariantSelector')) {
-        this.toggleVariantSelector();
+        store.data.variantSelectorIsOpen = false;
+        document.getElementById('variantSelector').classList.remove('variant-selector--is-active');
       }
 
       if (target.classList.contains('js-toggleFullscreen')) {
@@ -236,11 +236,6 @@ class Compare {
     }, true);
   }
 
-  toggleVariantSelector() {
-    store.data.variantSelectorIsOpen = !store.data.variantSelectorIsOpen;
-    document.getElementById('variantSelector').classList.toggle('variant-selector--is-active');
-  }
-
   getArtefactUrl(artefactId) {
     const artefact = store.data.artefacts[artefactId];
     const artefactView = artefact.data.imageStack.overall.images[0].tiles;
@@ -248,15 +243,19 @@ class Compare {
   }
 
   getVariantUrl(variantId) {
-    const { artefactId, image } = store.data.variants[variantId];
+    console.log(store.data);
+    console.log(variantId);
+    const { variant, image } = store.data.variants[variantId];
     const variantView = image.tiles;
-    return this.getViewUrl(artefactId, variantView.path, variantView.src);
+    return this.getViewUrl(variant.slug, variantView.path, variantView.src);
   }
 
   getVariants(artefactId, artefact) {
     store.data.variants = {};
     store.data.variantSelector = [];
+    
     variants.forEach((variant) => {
+      if (!artefact.data.imageStack[variant]) return;
       artefact.data.imageStack[variant].images.forEach((image) => {
         const variantPreview = image.xsmall;
         const variantId = variantPreview.src;
@@ -267,7 +266,8 @@ class Compare {
         store.data.variantSelector.push({ id: variantId, src: variantPreviewUrl });
       });
     });
-    this.toggleVariantSelector();
+    store.data.variantSelectorIsOpen = true;
+    document.getElementById('variantSelector').classList.add('variant-selector--is-active');
   }
 
   enableViewLock() {
@@ -317,7 +317,7 @@ class Compare {
   updateStage(id, mode) {
     const viewerId = this.viewerMapping[store.data.activeArea];
     const viewUrl = mode === 'artefact' ? this.getArtefactUrl(id) : this.getVariantUrl(id);
-
+    
     store.data.viewerHasContent[store.data.activeArea] = true;
     this.viewerControl[viewerId] = this[viewerId];
     this.viewerControl[viewerId].open(viewUrl);
