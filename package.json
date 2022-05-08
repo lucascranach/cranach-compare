@@ -4,17 +4,20 @@
   "description": "Tool for artefact comparism",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node dev-server.js"
   },
   "author": "Christian Noss",
   "license": "ISC",
   "devDependencies": {
     "eslint": "^7.27.0",
+    "npm-run-all": "^4.1.5",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-config-standard": "^16.0.2",
     "eslint-plugin-import": "^2.23.3",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.3.1",
+    "live-server": "^1.1.0",
     "stylelint": "^13.13.1",
     "stylelint-config-standard": "^22.0.0"
   }
