@@ -50,9 +50,11 @@ const addToCompareCollection = (elementToBeStored) => {
   const objectTitle = ele.dataset.objectTitle;
   const imageId = ele.dataset.imageId;
   const imageType = ele.dataset.imageType;
+  const imagePreviewUrl = ele.dataset.imagePreviewUrl;
+  const imageTilesUrl = ele.dataset.imageTilesUrl;
 
   const data = {
-    title, cdaId, objectTitle, imageId, imageType,
+    title, cdaId, objectTitle, imageId, imageType, imagePreviewUrl, imageTilesUrl, 
   }
   
   const isAlreadyCollected = compareCollection.findIndex((item) => item.imageId === imageId) >= 0 ? true : false;

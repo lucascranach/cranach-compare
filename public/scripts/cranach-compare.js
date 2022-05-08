@@ -5,15 +5,14 @@ https://codepen.io/imoskvin/pen/yOXqvO
 https://github.com/openseadragon/openseadragon/issues/1653
 ############################################################################ */
 
+const CRANACH_COLLECT_LOCALSTORAGE_KEY = 'cranachCollect';
+
 const store = new Reef.Store({
   data: {
-    artefacts: {},
-    variants: {},
-    artefactSelector: [],
-    variantSelector: [],
+    images: {},
+    imageSelector: [],
     activeArea: 'left',
-    artefactSelectorIsOpen: true,
-    variantSelectorIsOpen: false,
+    imageSelectorIsOpen: true,
     toggleViewLock: false,
     viewerHasContent: {
       left: false,
@@ -22,31 +21,15 @@ const store = new Reef.Store({
   },
 });
 
-const variants = [
-  'analysis',
-  'conservation',
-  'detail',
-  'irr',
-  'koe',
-  'other',
-  'overall',
-  'photomicrograph',
-  'reflected-light',
-  'reverse',
-  'rkd',
-  'transmitted-light',
-  'uv-light',
-  'x-radiograph',
-];
+
 
 class Compare {
   constructor(config) {
     this.config = config;
 
-    this.initArtefactSelector();
-    this.initVariantSelector();
+    this.initImageSelector();
     this.initStage();
-    this.getArtefactsFromQuery();
+    this.getImagesFromLocalStorage();
     this.listenToEvents();
     this.compareRootElement = document.getElementById('compareRoot');
     this.viewerMapping = {
@@ -63,21 +46,21 @@ class Compare {
     };
   }
 
-  initArtefactSelector() {
-    this.artefactSelector = new Reef('#imageStripe', {
+  initImageSelector() {
+    this.imageSelector = new Reef('#imageStripe', {
       store,
       template() {
-        const activeClass = store.data.artefactSelectorIsOpen ? '' : 'image-stripe-grid--is-active';
+        const activeClass = store.data.imageSelectorIsOpen ? '' : 'image-stripe-grid--is-active';
         const imageStripe = `
         <div class="image-stripe-grid ${activeClass}">
-          ${store.data.artefactSelector.map((artefact) => `
-          <figure id="${artefact.id}" class="small-card">
+          ${store.data.imageSelector.map((image) => `
+          <figure id="${image.id}" class="small-card">
             <div class="small-card__image-holder">
               <img
-                class="small-card__image js-changeArtefact"
-                data-target="${artefact.id}" 
-                src='${artefact.src}' 
-                alt='${artefact.id}'
+                class="small-card__image js-changeImage"
+                data-target="${image.id}" 
+                src='${image.src}' 
+                alt='${image.id}'
               >
             </div>
           </figure>
@@ -86,9 +69,9 @@ class Compare {
         return imageStripe;
       },
     });
-    this.artefactSelector.render();
+    this.imageSelector.render();
 
-    this.artefactSelectorNavigation = new Reef('#artefactSelectorNavigation', {
+    this.imageSelectorNavigation = new Reef('#imageSelectorNavigation', {
       store,
       template() {
         const toggleViewLockIcon = store.data.toggleViewLock ? 'lock' : 'lock_open';
@@ -97,8 +80,8 @@ class Compare {
         const showViewLockClass = showViewLock ? '' : 'main-navigation__item--is-hidden';
 
         return `
-        <div class="artefact-selector__navigation-toggle">
-          <i class="icon js-toggleArtefactSelector">collections</i>
+        <div class="image-selector__navigation-toggle">
+          <i class="icon js-toggleImageSelector">collections</i>
         </div>
         <div class="main-navigation__item js-toggleFullscreen" >
           <i class="icon">fullscreen</i>
@@ -113,7 +96,7 @@ class Compare {
         `;
       },
     });
-    this.artefactSelectorNavigation.render();
+    this.imageSelectorNavigation.render();
   }
 
   initStage() {
@@ -154,59 +137,18 @@ class Compare {
     });
   }
 
-  initVariantSelector() {
-    this.variantSelector = new Reef('#variantSelector', {
-      store,
-      template() {
-        const orientation = store.data.activeArea === 'left' ? 'variant-stripe__wrap--is-right' : 'variant-stripe__wrap--is-left';
-        const imageStripe = `
-        <div class="variant-stripe__wrap ${orientation}">
-          <div class="variant-selector__navigation-toggle">
-            <i class="icon l js-closeVariantSelector">close</i>
-          </div>
-          <div class="variant-stripe__grid">
-            ${store.data.variantSelector.map((variant) => `
-              <figure id="${variant.id}" class="small-card">
-                <div class="small-card__image-holder">
-                  <img
-                    class="small-card__image js-changeVariant"
-                    data-target="${variant.id}" 
-                    src='${variant.src}' 
-                    alt='${variant.id}'
-                  >
-                </div>
-              </figure>
-            `).join('')}
-          </div>
-        </div>`;
-        return imageStripe;
-      },
-    });
-    this.variantSelector.render();
-  }
-
-  changeArtefact(element) {
+  changeImage(element) {
     const id = element.dataset.target;
-    const artefact = store.data.artefacts[id];
-    this.getVariants(id, artefact);
-    this.updateStage(id, 'artefact');
-  }
-
-  changeVariant(element) {
-    const id = element.dataset.target;
-    this.updateStage(id, 'variant');
+    const image = store.data.images[id];
+    this.updateStage(image.data.imageTilesUrl);
   }
 
   listenToEvents() {
     document.addEventListener('click', (e) => {
       const { target } = e;
 
-      if (target.classList.contains('js-changeArtefact')) {
-        this.changeArtefact(target);
-      }
-
-      if (target.classList.contains('js-changeVariant')) {
-        this.changeVariant(target);
+      if (target.classList.contains('js-changeImage')) {
+        this.changeImage(target);
       }
 
       if (target.classList.contains('js-toggleActiveArea')) {
@@ -215,13 +157,8 @@ class Compare {
         store.data.activeArea = store.data.activeArea === 'left' ? 'right' : 'left';
       }
 
-      if (target.classList.contains('js-toggleArtefactSelector')) {
-        store.data.artefactSelectorIsOpen = !store.data.artefactSelectorIsOpen;
-      }
-
-      if (target.classList.contains('js-closeVariantSelector')) {
-        store.data.variantSelectorIsOpen = false;
-        document.getElementById('variantSelector').classList.remove('variant-selector--is-active');
+      if (target.classList.contains('js-toggleImageSelector')) {
+        store.data.imageSelectorIsOpen = !store.data.imageSelectorIsOpen;
       }
 
       if (target.classList.contains('js-toggleFullscreen')) {
@@ -234,40 +171,6 @@ class Compare {
         this.toggleViewLock();
       }
     }, true);
-  }
-
-  getArtefactUrl(artefactId) {
-    const artefact = store.data.artefacts[artefactId];
-    const artefactView = artefact.data.imageStack.overall.images[0].tiles;
-    return this.getViewUrl(artefact.slug, artefactView.path, artefactView.src);
-  }
-
-  getVariantUrl(variantId) {
-    console.log(store.data);
-    console.log(variantId);
-    const { variant, image } = store.data.variants[variantId];
-    const variantView = image.tiles;
-    return this.getViewUrl(variant.slug, variantView.path, variantView.src);
-  }
-
-  getVariants(artefactId, artefact) {
-    store.data.variants = {};
-    store.data.variantSelector = [];
-    
-    variants.forEach((variant) => {
-      if (!artefact.data.imageStack[variant]) return;
-      artefact.data.imageStack[variant].images.forEach((image) => {
-        const variantPreview = image.xsmall;
-        const variantId = variantPreview.src;
-        const variantPreviewUrl = this.getPreviewUrl(
-          artefact.slug, variantPreview.path, variantPreview.src,
-        );
-        store.data.variants[variantId] = { artefactId, image };
-        store.data.variantSelector.push({ id: variantId, src: variantPreviewUrl });
-      });
-    });
-    store.data.variantSelectorIsOpen = true;
-    document.getElementById('variantSelector').classList.add('variant-selector--is-active');
   }
 
   enableViewLock() {
@@ -314,9 +217,9 @@ class Compare {
     }
   }
 
-  updateStage(id, mode) {
+  updateStage(imageTileUrl) {
     const viewerId = this.viewerMapping[store.data.activeArea];
-    const viewUrl = mode === 'artefact' ? this.getArtefactUrl(id) : this.getVariantUrl(id);
+    const viewUrl = imageTileUrl;
     
     store.data.viewerHasContent[store.data.activeArea] = true;
     this.viewerControl[viewerId] = this[viewerId];
@@ -326,58 +229,31 @@ class Compare {
 
   }
 
-  getArtefactsFromQuery() {
-    const params = new URLSearchParams(window.location.search);
+  getImagesFromLocalStorage() {
+    const compareCollectionJSON = localStorage.getItem(CRANACH_COLLECT_LOCALSTORAGE_KEY);
+    const compareCollection = JSON.parse(compareCollectionJSON);
 
-    if (params.has('artefacts')) {
-      const artefacts = params.get('artefacts').replace(' ', '').split(',');
-      artefacts.forEach((artefact) => {
-        (async () => {
-          const [inventoryNumber, objectName, entityType] = artefact.split(/:/);
-          
-          const suffix = objectName !== '' ? `_${objectName}` : '';
-          const prefix = entityType === 'G' ? 'G_' : '';
-          const artefactSlug = `${prefix}${inventoryNumber}${suffix}`;
-          const url = this.config['image-data-api'] + artefactSlug;
+    compareCollection.forEach(item => {
+      const { imageId } = item;
+      const { imageTilesUrl } = item;
+      const { imagePreviewUrl } = item;
 
-          try {
-            const response = await fetch(url, {
-              method: 'GET',
-              withCredentials: true,
-              headers: {
-                'x-api-key': this.config['image-data-api-key'],
-                'Content-Type': 'application/json',
-              },
-            });
-            const data = await response.json();
-            this.addArtefactDataToObject(artefact, data, artefactSlug, entityType);
-          } catch (err) {
-            console.error(`${err}. There seems to be no data for ${artefact}`);
-          }
-        })();
-      });
-    }
+      const imageData = {
+        imageId, imageTilesUrl, imagePreviewUrl
+      };
+      this.addImageDataToObject(imageId, imageData);
+    });
+
   }
 
-  addArtefactDataToObject(artefactId, artefactData, artefactSlug, entityType) {
-    store.data.artefacts[artefactId] = { data: artefactData, slug: artefactSlug, entityType: entityType };
+  addImageDataToObject(imageId, imageData) {
+    store.data.images[imageId] = { data: imageData };
 
-    const artefactPreview = artefactData.imageStack.overall.images[0].xsmall;
-    const artefactPreviewUrl = this.getPreviewUrl(
-      artefactSlug, artefactPreview.path, artefactPreview.src,
-    );
-    store.data.artefactSelector.push({ id: artefactId, src: artefactPreviewUrl, slug: artefactSlug, entityType: entityType});
+    const { imagePreviewUrl } = imageData;
+    store.data.imageSelector.push({ id: imageId, src: imagePreviewUrl });
   }
 
-  getPreviewUrl(slug, path, src) {
-    const server = this.config.imageserver;
-    return `${server}${slug}/${path}/${src}`;
-  }
 
-  getViewUrl(slug, path, src) {
-    const server = this.config.baseUrlTiles;
-    return `${server}${slug}/${path}/${src}`;
-  }
 }
 
 document.addEventListener('DOMContentLoaded', () => {

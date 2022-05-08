@@ -1,7 +1,7 @@
-/* Artefact Selector
+/* Image Selector
 ###########################################################################  */
 
-.artefact-selector {
+.image-selector {
   position: fixed;
   left: 0;
   right: 0;
@@ -11,24 +11,24 @@
   /* background-color: var(--darken-strong); */
 }
 
-.artefact-selector__navigation {
+.image-selector__navigation {
   display: flex;
   justify-content: center;
   gap: var(--xxs);
 }
 
-.artefact-selector__navigation-toggle {
+.image-selector__navigation-toggle {
   padding: var(--s);
   background-color: var(--darker);
   border-radius: var(--radius-s);
   margin-bottom: var(--s);
 }
 
-.artefact-selector__navigation-toggle .icon {
+.image-selector__navigation-toggle .icon {
   margin: 0;
 }
 
-.artefact-selector__navigation-toggle:hover {
+.image-selector__navigation-toggle:hover {
   cursor: pointer;
 }
 
@@ -97,7 +97,6 @@
   z-index: var(--level-content);
 }
 
-
 /* Stage Indicator
 ###########################################################################  */
 
@@ -120,63 +119,6 @@
   right: 0;
   z-index: var(--level-content-nav);
 }
-
-
-/* Variante Selector
-###########################################################################  */
-
-.variant-selector {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 20px;
-  display: none;
-  z-index: var(--level-section-nav);
-  pointer-events: none;
-}
-
-.variant-selector--is-active {
-  display: block;
-}
-
-.variant-selector__navigation-toggle {
-  padding: var(--s);
-  text-align: right;
-  background-color: var(--darkest);
-  pointer-events: auto;
-}
-
-.variant-selector__navigation-toggle:hover {
-  cursor: pointer;
-}
-
-.variant-stripe__wrap {
-  position: relative;
-  transition: all var(--tr-fast);
-  background-color: var(--darken-strongest);
-  box-shadow: var(--shadow-top-m);
-  height: 100vh;
-  width: 50vw;
-}
-
-.variant-stripe__wrap--is-right {
-  margin-left: 50vw;
-  justify-content: right;
-}
-
-.variant-stripe__wrap--is-left {
-  margin-right: 50vw;
-  justify-content: left;
-}
-
-.variant-stripe__grid {
-  display: grid;
-  gap: var(--s);
-  grid-template-columns: repeat(auto-fit, var(--tile-xxs));
-  grid-template-rows: repeat(auto-fit, var(--tile-xxs));
-}
-
 
 /* Main Navigation
 ###########################################################################  */

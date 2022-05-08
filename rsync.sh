@@ -1,0 +1,1 @@
+rsync -avz -e ssh ./docs/ cnoss@lucascranach.org:/var/www/html/cranach-compare/
