@@ -50,11 +50,38 @@
 }
 
 .small-card {
+  overflow: hidden;
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
   background-color: var(--darker);
   pointer-events: auto;
+}
+
+.compare-collection-remove{
+  transition: top var(--tr-fast);
+  position: absolute;
+  top: -50px;
+}
+
+.small-card:hover .compare-collection-remove{
+  top: 0;
+}
+
+.compare-collection-remove::after{
+  content: "playlist_remove";
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: inline-block;
+  padding: var(--xxs) var(--xs);
+  background-color: var(--darken-strongest);
+  border-radius: var(--radius-xs);
+  color: var(--accent);
+  font-family: var(--font-icons);
+  font-size: var(--m);
+  vertical-align: bottom;
 }
 
 .small-card:hover {

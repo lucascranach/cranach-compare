@@ -1,4 +1,3 @@
-const CRANACH_COLLECT_LOCALSTORAGE_KEY = 'cranachCollect';
 let compareCollection = [];
 
 /* Is local storage available?
@@ -31,14 +30,14 @@ const checkIfStorageIsAvailable = () => {
 /* read compare Collection
 ============================================================================ */
 const getCompareCollection = () => {
-  const compareCollectionJSON = localStorage.getItem(CRANACH_COLLECT_LOCALSTORAGE_KEY);
+  const compareCollectionJSON = localStorage.getItem('cranachCollect');
   return compareCollectionJSON ? JSON.parse(compareCollectionJSON) : [];
 };
 
 /* write compare Collection
 ============================================================================ */
 const putCompareCollection = (collection) => {
-  localStorage.setItem(CRANACH_COLLECT_LOCALSTORAGE_KEY, JSON.stringify(collection));
+  localStorage.setItem('cranachCollect', JSON.stringify(collection));
 };
 
 /* add to local storage
@@ -85,12 +84,14 @@ const removeFromCompareCollection = (elementToBeRemoved) => {
 ============================================================================ */
 const addInteractiveElements = () => {
   const collectableElements = document.querySelectorAll('.js-is-collectable');
+  
   collectableElements.forEach(ele => {
     const collectInteraction = document.createElement("span");
     collectInteraction.classList.add('collect-interaction', 'js-compare-collection-add-or-remove');
     ele.appendChild(collectInteraction);
   });
 };
+
 
 /* Toggle Compare Launcher
 ============================================================================ */
