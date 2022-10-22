@@ -5,8 +5,6 @@ https://codepen.io/imoskvin/pen/yOXqvO
 https://github.com/openseadragon/openseadragon/issues/1653
 ############################################################################ */
 
-const CRANACH_COLLECT_LOCALSTORAGE_KEY = 'cranachCollect';
-
 const store = new Reef.Store({
   data: {
     images: {},
@@ -21,8 +19,6 @@ const store = new Reef.Store({
   },
 });
 
-
-
 class Compare {
   constructor(config) {
     this.config = config;
@@ -31,6 +27,7 @@ class Compare {
     this.initStage();
     this.getImagesFromLocalStorage();
     this.listenToEvents();
+    
     this.compareRootElement = document.getElementById('compareRoot');
     this.viewerMapping = {
       left: 'leftViewer',
@@ -54,7 +51,8 @@ class Compare {
         const imageStripe = `
         <div class="image-stripe-grid ${activeClass}">
           ${store.data.imageSelector.map((image) => `
-          <figure id="${image.id}" class="small-card">
+          <figure id="${image.id}" data-image-id="${image.id}" class="small-card js-is-collectable">
+            <span class="compare-collection-remove js-compareCollectionRemove" title="remove"></span>
             <div class="small-card__image-holder">
               <img
                 class="small-card__image js-changeImage"
@@ -69,6 +67,7 @@ class Compare {
         return imageStripe;
       },
     });
+
     this.imageSelector.render();
 
     this.imageSelectorNavigation = new Reef('#imageSelectorNavigation', {
@@ -151,6 +150,13 @@ class Compare {
         this.changeImage(target);
       }
 
+      if (target.classList.contains('js-compareCollectionRemove')) {
+        const element = target.closest('.js-compareCollectionRemove').parentElement;
+        removeFromCompareCollection(element);
+        this.getImagesFromLocalStorage();
+      }
+
+
       if (target.classList.contains('js-toggleActiveArea')) {
         this.areas.left.classList.toggle('stage-area--is-active');
         this.areas.right.classList.toggle('stage-area--is-active');
@@ -230,8 +236,12 @@ class Compare {
   }
 
   getImagesFromLocalStorage() {
-    const compareCollectionJSON = localStorage.getItem(CRANACH_COLLECT_LOCALSTORAGE_KEY);
+    store.data.images = {};
+    store.data.imageSelector = [];
+    const compareCollectionJSON = localStorage.getItem('cranachCollect');
     const compareCollection = JSON.parse(compareCollectionJSON);
+    if(compareCollection === null) return;
+    
 
     compareCollection.forEach(item => {
       const { imageId } = item;
@@ -252,8 +262,6 @@ class Compare {
     const { imagePreviewUrl } = imageData;
     store.data.imageSelector.push({ id: imageId, src: imagePreviewUrl });
   }
-
-
 }
 
 document.addEventListener('DOMContentLoaded', () => {
