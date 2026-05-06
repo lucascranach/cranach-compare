@@ -86,9 +86,12 @@ const addInteractiveElements = () => {
   const collectableElements = document.querySelectorAll('.js-is-collectable');
   
   collectableElements.forEach(ele => {
+    const container = ele.querySelector('.image-buttons-container');
+    const target = container ?? ele;
+    if (target.querySelector('.collect-interaction')) return;
     const collectInteraction = document.createElement("span");
     collectInteraction.classList.add('collect-interaction', 'js-compare-collection-add-or-remove');
-    ele.appendChild(collectInteraction);
+    target.appendChild(collectInteraction);
   });
 };
 
